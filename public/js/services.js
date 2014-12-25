@@ -60,10 +60,15 @@ sfServices.factory('mainSvc',['$q','$http',function($q,$http){
 		
 		},
 
-		downloadData:function(data){
-			var defer = $q.defer();
-			downloadFile(defer,data);
-			return defer.promise;
+		downloadData:function(data,separator,fieldTexts){
+			//Assume that the data will always be an array
+			var fileContent = _.values(fieldTexts).join(separator) + '\n';
+			_(data).forEach(function(content){
+				fileContent += _.values(content).join(separator) + '\n';
+			})
+
+			var blob = new Blob([fileContent],{type:"data:text/csv;charset=utf-8"});
+			saveAs(blob, "ProfileData.csv");
 		},
 
 		getGlobalValues:function(){
@@ -77,11 +82,6 @@ sfServices.factory('mainSvc',['$q','$http',function($q,$http){
 	}
 }])
 
-
-function downloadFile(defer,data){
-	window.requestFileSystem(window.TEMPORARY, 1024*1024, onInitFs, errorHandler);
-	defer.resolve('done');
-}
 
 
 function frameProfileTable(defer,rootObjectName){

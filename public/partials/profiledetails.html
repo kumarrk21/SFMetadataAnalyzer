@@ -1,5 +1,10 @@
 <div class="row">
+    <div class='col'>
+        <ion-toggle ng-model="batch" ng-change='toggleBatch();' toggle-class="toggle-calm">Batch</ion-toggle>
+    </div>
+</div>
 
+<div class="row">
       <div class='col'>
           <ion-header-bar class="bar-subheader item-input-inset">  
               <select class="ion-select" ng-model="profileAttrib" ng-change="getFilterTable(profileAttrib)" ng-options="profileAttrib.name for profileAttrib in profileAttribs"></select>
@@ -12,8 +17,14 @@
           </ion-header-bar>
       </div>
 </div>
-<br><br>
 
+<br><br>
+<div class="row">
+  <div class='col'>
+    <p>{{message}}</p>
+  </div>  
+</div>  
+<br><br>
 <div class="row">
    <div class='col' ng-repeat="fieldText in profileTable.fieldTexts">
       {{fieldText}}
