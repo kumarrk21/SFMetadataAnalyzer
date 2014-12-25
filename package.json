@@ -1,0 +1,29 @@
+{
+  "name": "SFMetaDataAnalyzer",
+  "version": "1.0.0",
+  "description": "Salesforce Metadata Analyzer",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://kumarrk21@bitbucket.org/kumarrk21/sfmetadataanalyzer.git"
+  },
+  "keywords": [
+    "salesforce",
+    "metadata"
+  ],
+  "author": "KK Ramamoorthy",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.10.0",
+    "ejs": "1.0.0",
+    "express": "^4.10.6",
+    "express-session": "^1.7.2",
+    "lodash": "^2.4.1",
+    "q": "^1.1.2",
+    "request": "2.51.0",
+    "soap": "0.6.0"
+  }
+}

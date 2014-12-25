@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="SFMetadataAnalyzer">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<title>Salesforce Metadata Analyzer</title>
+		<link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/1.0.0-beta.14/css/ionic.min.css">
+		<link rel="stylesheet" type="text/css" href="css/app.css">
+		
+		<script src="http://code.ionicframework.com/1.0.0-beta.14/js/angular/angular.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.27/angular-route.js"></script>
+		<script src="http://code.ionicframework.com/1.0.0-beta.14/js/angular/angular-animate.js"></script>
+		<script src="http://code.ionicframework.com/1.0.0-beta.14/js/angular/angular-resource.js"></script>
+		<script src="http://code.ionicframework.com/1.0.0-beta.14/js/angular/angular-sanitize.js"></script>
+		<script src="http://code.ionicframework.com/1.0.0-beta.14/js/ionic.bundle.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+		
+		
+		<script src="js/app.js"></script>
+  		<script src="js/controllers.js"></script>
+  		<script src="js/filters.js"></script>
+  		<script src="js/services.js"></script>
+		<script src="js/directives.js"></script>
+	</head>
+	<body ng-init="apex=false">
+		<ion-header-bar class="bar-positive">
+ 			<h1 class="title">Salesforce Metadata Analyzer</h1>
+  		</ion-header-bar>
+  		<ion-content>
+  			<div class="view-container" >
+				<div ng-view class="view-frame fade"></div>
+			</div>
+  		</ion-content>
+
+	</body>
+</html>

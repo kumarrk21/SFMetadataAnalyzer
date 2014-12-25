@@ -1,0 +1,30 @@
+<div class="row">
+
+      <div class='col'>
+          <ion-header-bar class="bar-subheader item-input-inset">  
+              <select class="ion-select" ng-model="profileAttrib" ng-change="getFilterTable(profileAttrib)" ng-options="profileAttrib.name for profileAttrib in profileAttribs"></select>
+              &nbsp;
+              <label class="item-input-wrapper">
+                  <i class="icon ion-ios7-search placeholder-icon"></i>
+                  <input type="search" placeholder="Search for" ng-model="search">
+              </label>
+              <button class="button icon-left ion-android-download button-clear" ng-click="downloadData();">&nbsp;Download</button>
+          </ion-header-bar>
+      </div>
+</div>
+<br><br>
+
+<div class="row">
+   <div class='col' ng-repeat="fieldText in profileTable.fieldTexts">
+      {{fieldText}}
+   </div>
+</div>  
+<hr>
+<div class="row"  ng-repeat="profile in profileTable.data | filter:search as filterResults ">
+  
+  <div class='col' ng-repeat="fieldName in profileTable.fieldNames">
+      {{$eval('profile.'+fieldName)}}
+  </div>
+
+</div>  
+

@@ -1,0 +1,34 @@
+
+<div class="list card" ng-show="showLogin">
+	<div>
+		<ion-radio ng-model="instance" ng-value="P">Production</ion-radio>
+		<ion-radio ng-model="instance" ng-value="S" ng-checked="">Sandbox</ion-radio>
+	</div>
+
+	<div class="item">
+  			<a class="button button-block button-calm" href="" ng-click="login();">Login</a>
+	</div>
+
+</div>		
+
+<div ng-hide="showLogin">
+	<div class="row responsive-sm">
+		<div class="col">
+			<button class="button icon-left ion-log-out button-clear" ng-click="logout();">Sign Out</button>
+		</div>	
+	</div>
+	<div class="row responsive-sm">
+		<div class="col">
+			<div class="list card" >
+	  			  <a href="" ng-click="getProfiles()" class="item item-icon-left">
+	    			<i class="icon ion-gear-b"></i> Profiles Analyzer
+	    		  </a>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+
+
