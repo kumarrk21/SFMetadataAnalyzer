@@ -16,6 +16,9 @@
   ],
   "author": "KK Ramamoorthy",
   "license": "MIT",
+  "engines": {
+    "node": "0.10.x"
+  },
   "dependencies": {
     "body-parser": "^1.10.0",
     "ejs": "1.0.0",
