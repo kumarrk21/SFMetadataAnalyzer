@@ -18,7 +18,6 @@ var profileBatchSize = process.env.PROFILEBATCHSIZE;
 exports.refreshSession = function(req, res){
 	var response = {};
 	var logoutURL = req.session.sfdcurl + '/secur/logout.jsp';
-	console.log(logoutURL);
 	//Revoke the oAuthToken first
 	var url = determineURL(req) + '/revoke?token=' + req.session.oAuthToken;
 	
