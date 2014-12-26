@@ -18,7 +18,7 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
     			if(authStatusReturn.data.data.authorized && !authStatusReturn.data.data.authenticated){
     				mainSvc.authenticate().then(function(authReturn){
     					//console.log('Authenticate Return', authReturn);
-                        mainSvc.describeService().then(function(describeReturn){
+                        //mainSvc.describeService().then(function(describeReturn){
                             //console.log('Service Description',describeReturn);
                         })
     				})
@@ -61,7 +61,7 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
 
             mainSvc.listMetadata(JSON.stringify(input)).then(function(profilesResult){
     
-               // console.log('Profiles', profilesResult);
+                console.log('Profiles', profilesResult);
               
                 if(profilesResult.data.success){
                   //Get the profile data in batches
@@ -95,7 +95,7 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
                             inputData.fullNames = profile;
 
                         mainSvc.readMetaData(JSON.stringify(inputData)).then(function(profileDataResult){   
-                             //console.log('Profile Data Result',profileDataResult);
+                             console.log('Profile Data Result',profileDataResult);
                             batchSize++;
             
                             _(profileDataResult.data.data).forEach(function(records){
