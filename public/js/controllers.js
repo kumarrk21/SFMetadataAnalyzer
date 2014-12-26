@@ -3,7 +3,7 @@
 /* Controllers */
 
 var sfControllers = angular.module('sfControllers',[]);
-var PROFILEBATCHSIZE = 10;
+var PROFILEBATCHSIZE = 1;
 
 sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 'mainSvc', 
     function($scope,$q, $location, $ionicLoading, mainSvc){
