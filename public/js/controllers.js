@@ -20,7 +20,7 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
     					//console.log('Authenticate Return', authReturn);
                         //mainSvc.describeService().then(function(describeReturn){
                             //console.log('Service Description',describeReturn);
-                        })
+                        //})
     				})
     			}
     		})
