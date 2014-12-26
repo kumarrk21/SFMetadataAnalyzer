@@ -31,6 +31,7 @@ sfApp.config(['$routeProvider', '$locationProvider',
 				controller: 'profileDetails',	
 
 			}).
+		
 			otherwise({
 				redirectTo: '/landing'
 			});

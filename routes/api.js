@@ -17,8 +17,11 @@ var profileBatchSize = process.env.PROFILEBATCHSIZE;
 
 exports.refreshSession = function(req, res){
 	var response = {};
+	var logoutURL = req.session.sfdcurl + '/secur/logout.jsp';
+	console.log(logoutURL);
 	//Revoke the oAuthToken first
-	var url = determineURL() + '/revoke?token=' + req.session.oAuthToken;
+	var url = determineURL(req) + '/revoke?token=' + req.session.oAuthToken;
+	
 	httpClient.get({url:url},function(e,r){
 		req.session.destroy(function(err){
 			if(err){
@@ -26,11 +29,13 @@ exports.refreshSession = function(req, res){
 				response.data = err.body;
 			}else{
 				response.success = true;
-				response.data = 'Session cookies destroyed successfully';
+				response.data = logoutURL;
 			}
+			res.json(response);
 		})	
-		res.json(response);
+		
 	})
+	
 	
 };
 

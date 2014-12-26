@@ -27,9 +27,6 @@
     opacity: 0;
 }Note: -moz, -o prefexies are skipped.
 
-.scroll {
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
+.ion-select{
+  width:600px; 
 }

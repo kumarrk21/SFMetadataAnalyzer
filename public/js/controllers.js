@@ -3,13 +3,25 @@
 /* Controllers */
 
 var sfControllers = angular.module('sfControllers',[]);
-var PROFILEBATCHSIZE = 1;
+//var PROFILEBATCHSIZE = 1;
 
-sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 'mainSvc', 
-    function($scope,$q, $location, $ionicLoading, mainSvc){
+sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , '$ionicModal', 'mainSvc', 
+    function($scope,$q, $location, $ionicLoading, $ionicModal, mainSvc){
         
         var globalValues = mainSvc.getGlobalValues();
     	$scope.showLogin = false;
+        $scope.profileBatchSize = 1;
+
+        $scope.profileBatchSize = globalValues.profileBatchSize;
+        if(!$scope.profileBatchSize) $scope.profileBatchSize = 1;
+
+      
+        $ionicModal.fromTemplateUrl('/partials/settingsModal.html', function(modal) {
+          $scope.settingsModal = modal;
+        }, {
+          scope: $scope,
+          animation: 'slide-in-up'
+        });
 
     	if(!$scope.apex){
     		mainSvc.getAuthStatus().then(function(authStatusReturn){
@@ -26,6 +38,7 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
     		})
     			
     	};
+       
 
     	$scope.login = function(){
     		mainSvc.getOAuthURL($scope.instance).then(function(returnData){
@@ -36,17 +49,21 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
 
         $scope.logout = function(){
             mainSvc.logout().then(function(returnData){
-                console.log(returnData);
-                $location.path( "/main" );
+                //console.log(returnData);
+                window.location = returnData.data.data;
+                //$location.path( "/main" );
             })
         };
 
-        $scope.refreshSession = function(){
-            mainSvc.refreshSession().then(function(returnData){
-                //console.log("Refresh session", returnData);
-            });
+
+        $scope.settings = function(){
+            $scope.settingsModal.show();
         };
 
+        $scope.profileBatchSizeChange = function(value){
+            globalValues.profileBatchSize = $scope.profileBatchSize = value;
+            mainSvc.setGlobalValues(globalValues);
+        };    
 
     	$scope.getProfiles = function(){
 
@@ -59,9 +76,11 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
             input.queries.push({type:'Profile'});
             input.asOfVersion = '32.0';
 
+            //console.log('Profile Batch Size', $scope.profileBatchSize);
+
             mainSvc.listMetadata(JSON.stringify(input)).then(function(profilesResult){
     
-                console.log('Profiles', profilesResult);
+                //console.log('Profiles', profilesResult);
               
                 if(profilesResult.data.success){
                   //Get the profile data in batches
@@ -74,7 +93,7 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
                     _(profilesResult.data.data).forEach(function(profile){
                         batchSize++;
                         names.push(decodeURI(profile.fullName));
-                        if(batchSize == PROFILEBATCHSIZE){
+                        if(batchSize == $scope.profileBatchSize){
                             profiles.push(names);
                             names = new Array();
                             batchSize = 0;
@@ -95,7 +114,7 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
                             inputData.fullNames = profile;
 
                         mainSvc.readMetaData(JSON.stringify(inputData)).then(function(profileDataResult){   
-                             console.log('Profile Data Result',profileDataResult);
+                            //console.log('Profile Data Result',profileDataResult);
                             batchSize++;
             
                             _(profileDataResult.data.data).forEach(function(records){
@@ -191,5 +210,6 @@ sfControllers.controller('profileDetails',['$scope', '$q', '$location', '$ionicL
 
 
         
- }]);       
-   
+ }]);  
+
+ 

@@ -1,0 +1,17 @@
+  <ion-modal-view>
+    <ion-header-bar class="bar-calm">
+      <h1 class="title">Settings</h1>
+    </ion-header-bar>
+    <ion-content>
+    	<div class="list">
+    			<div class="item">
+    				<label>Profile Batch Size = {{profileBatchSize}}</label>
+    			</div>		
+    			<div class="item range range-positive">
+    				 <i class="icon ion-minus-circled"></i>
+    				 <input type="range" ng-model="profileBatchSize" ng-change="profileBatchSizeChange(profileBatchSize);"  min="1" max="10" value="{{profileBatchSize}}">
+    				 <i class="icon ion-plus-circled"></i>
+    			</div>
+    	</div>
+    </ion-content>
+  </ion-modal-view>
