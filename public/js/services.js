@@ -86,8 +86,6 @@ sfServices.factory('mainSvc',['$q','$http',function($q,$http){
 
 function frameProfileTable(defer,rootObjectName){
 	var returnTable = {};
-	//returnTable.fieldTexts = new Array('profileName','profileId');
-	//returnTable.fieldNames = new Array('profileName','profileId');
 	returnTable.fieldTexts = new Array();
 	returnTable.fieldNames = new Array();
 	returnTable.data = new Array();
@@ -99,19 +97,21 @@ function frameProfileTable(defer,rootObjectName){
 		var recordTypeTable = new Array();
 		var rootObject = eval('profileData.'+rootObjectName);
 
-		if(_.isArray(rootObject)){
-			recordTypeTable = rootObject;
-		}else{
-			recordTypeTable.push(rootObject);
+		if(rootObject){
+			if(_.isArray(rootObject)){
+				recordTypeTable = rootObject;
+			}else{
+				recordTypeTable.push(rootObject);
+			}
 		}
+
 		_(recordTypeTable).forEach(function(recordType){
 			var data = {};
-			data.profileName = profileData.fullName;
-			data.profileId = '';
+			data.Name = profileData.fullName;
+			data.ID = '';
 			if(profile){
-				data.profileId = profile.id;
+				data.ID = profile.id;
 			}
-			//data.recordType = recordType;
 			_(_.keys(recordType)).forEach(function(fieldName){
 				data[fieldName] = recordType[fieldName];
 			})
@@ -120,10 +120,8 @@ function frameProfileTable(defer,rootObjectName){
 
 	})
 	try{
-		//var data = returnTable.data[0].recordType;	
 		var data = returnTable.data[0];
 		_(_.keys(data)).forEach(function(fieldName){
-			//returnTable.fieldNames.push('recordType.'+fieldName);
 			returnTable.fieldNames.push(fieldName);
 			returnTable.fieldTexts.push(fieldName);
 		})

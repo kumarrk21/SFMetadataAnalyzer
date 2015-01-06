@@ -11,9 +11,6 @@ var q = require('q');
 var _ = require('lodash');
 var PRODURL = process.env.PRODURL;
 var SBXURL = process.env.SBXURL;
-//var soapClient;
-var apiVersion = process.env.APIVERSION;
-var profileBatchSize = process.env.PROFILEBATCHSIZE;
 
 exports.refreshSession = function(req, res){
 	var response = {};
@@ -123,6 +120,7 @@ exports.describeService = function(req,res){
 exports.listMetadata = function(req,res){
 	var input = JSON.parse(req.body);
 	var response = {};
+	req.session.apiVersion = input.asOfVersion;
 
 	createSOAPClient(req).then(function(returnData){
 
@@ -176,12 +174,12 @@ function createSOAPClient(req){
 	var response = {};
 	response.success = true;
 	
-
 	if(soapClient){
 		defer.resolve(response);
 	}else{
 		var url = req.protocol + '://' + req.headers.host + '/api/getWSDL';
-		var options = {endpoint:req.session.sfdcurl + '/services/Soap/m/32.0'};
+		//var options = {endpoint:req.session.sfdcurl + '/services/Soap/m/32.0'};
+		var options = {endpoint:req.session.sfdcurl + '/services/Soap/m/'+req.session.apiVersion};
 		soap.createClient(url,options,function(err,client){
 			if(err){
 				response.success = false;

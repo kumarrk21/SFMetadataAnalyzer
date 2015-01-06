@@ -9,9 +9,13 @@
     			</div>		
     			<div class="item range range-positive">
     				 <i class="icon ion-minus-circled"></i>
-    				 <input type="range" ng-model="profileBatchSize" ng-change="profileBatchSizeChange(profileBatchSize);"  min="1" max="10" value="{{profileBatchSize}}">
+    				 <input type="range" ng-model="profileBatchSize" ng-change="settingsChange(profileBatchSize,apiVersion);"  min="1" max="10" value="{{profileBatchSize}}">
     				 <i class="icon ion-plus-circled"></i>
     			</div>
+               <label class="item item-input">
+                    <span class="input-label">API Version</span>
+                    <input type="text" value={{apiVersion}} ng-model="apiVersion" ng-change="settingsChange(profileBatchSize,apiVersion);">
+                </label>  
     	</div>
     </ion-content>
   </ion-modal-view>

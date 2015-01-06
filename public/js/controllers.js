@@ -10,10 +10,15 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
         
         var globalValues = mainSvc.getGlobalValues();
     	$scope.showLogin = false;
-        $scope.profileBatchSize = 1;
+        $scope.message = '';
+        //$scope.profileBatchSize = 1;
+        //$scope.apiVersion = '32.0';
 
         $scope.profileBatchSize = globalValues.profileBatchSize;
         if(!$scope.profileBatchSize) $scope.profileBatchSize = 1;
+
+        $scope.apiVersion = globalValues.apiVersion;
+        if(!$scope.apiVersion) $scope.apiVersion = '32.0';
 
       
         $ionicModal.fromTemplateUrl('/partials/settingsModal.html', function(modal) {
@@ -60,27 +65,28 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
             $scope.settingsModal.show();
         };
 
-        $scope.profileBatchSizeChange = function(value){
-            globalValues.profileBatchSize = $scope.profileBatchSize = value;
+        $scope.settingsChange = function(profileBatchSize,apiVersion){
+            globalValues.profileBatchSize = $scope.profileBatchSize = profileBatchSize;
+            globalValues.apiVersion = $scope.apiVersion = apiVersion;
             mainSvc.setGlobalValues(globalValues);
         };    
 
-    	$scope.getProfiles = function(){
+    	$scope.getProfiles = function(type){
 
-            $ionicLoading.show({template: 'Reading Profiles...'});
+            $ionicLoading.show({template: 'Reading Metadata...'});
 
             var profileData = new Array();
 
             var input = {};
             input.queries = new Array();
-            input.queries.push({type:'Profile'});
-            input.asOfVersion = '32.0';
+            input.queries.push({type:type});
+            input.asOfVersion = $scope.apiVersion;
 
             //console.log('Profile Batch Size', $scope.profileBatchSize);
 
             mainSvc.listMetadata(JSON.stringify(input)).then(function(profilesResult){
     
-                //console.log('Profiles', profilesResult);
+                //console.log('Metadata Result', profilesResult);
               
                 if(profilesResult.data.success){
                   //Get the profile data in batches
@@ -108,9 +114,11 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
                     //console.log('Profiles',profiles);
                     batchSize = 0;
 
+                    if(_.size(profiles)<=0) $ionicLoading.hide();
+
                     _(profiles).forEach(function(profile){
                             var inputData = {};
-                            inputData.type = 'Profile';
+                            inputData.type = type;
                             inputData.fullNames = profile;
 
                         mainSvc.readMetaData(JSON.stringify(inputData)).then(function(profileDataResult){   
@@ -127,7 +135,7 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
                                 mainSvc.setGlobalValues(globalValues);
                                 $ionicLoading.hide();
                                 //console.log('Scope data',profileData);
-                                $location.path( "/profileDetails" );
+                                $location.path( "/profileDetails").search({type:type});
 
                             }
 
@@ -147,24 +155,40 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
 
 }]);
 
-sfControllers.controller('profileDetails',['$scope', '$q', '$location', '$ionicLoading' , 'mainSvc', 
-    function($scope,$q, $location, $ionicLoading, mainSvc){
+sfControllers.controller('profileDetails',['$scope', '$q', '$location', '$routeParams', '$ionicLoading' , 'mainSvc', 
+    function($scope,$q, $location, $routeParams, $ionicLoading, mainSvc){
 
+        //console.log('Route Params', $routeParams)
         var initialMessage = 'Reading in Batch mode, click the download button to download the data in .cvs format';
         $scope.batch = true;
         $scope.message = initialMessage;
 
         var profileAttribs = new Array();
+
         profileAttribs.push({name:'---Select a Filter---',id:null});
         profileAttribs.push({name:'Applications',id:'applicationVisibilities'});
         profileAttribs.push({name:'Apex Classes',id:'classAccesses'});
+        profileAttribs.push({name:'Custom Permissions',id:'customPermissions'});
+        profileAttribs.push({name:'Ext. Datasource Access',id:'externalDataSourceAccesses'});
+        
         profileAttribs.push({name:'Field Permissions',id:'fieldPermissions'});
-        profileAttribs.push({name:'Layout Assignments',id:'layoutAssignments'});
+
+        if($routeParams.type=='Profile'){ 
+            profileAttribs.push({name:'Fld Levl sec.',id:'fieldLevelSecurities'});
+            profileAttribs.push({name:'Layout Assignments',id:'layoutAssignments'});
+            profileAttribs.push({name:'Login Hours',id:'loginHours'});
+            profileAttribs.push({name:'Login IP Ranges',id:'loginIpRanges'});
+        }
+
         profileAttribs.push({name:'Object Permissions',id:'objectPermissions'});
         profileAttribs.push({name:'Page Access',id:'pageAccesses'});
         profileAttribs.push({name:'Record Types',id:'recordTypeVisibilities'});
-        profileAttribs.push({name:'Tabs',id:'tabVisibilities'});
-        profileAttribs.push({name:'Permissions',id:'userPermissions'});
+        if($routeParams.type=='Profile'){ 
+            profileAttribs.push({name:'Tab Visibility',id:'tabVisibilities'});
+        }else{
+            profileAttribs.push({name:'Tab Settings',id:'tabSettings'});
+        }
+        profileAttribs.push({name:'User Permissions',id:'userPermissions'});
 
         $scope.profileAttribs = profileAttribs;
         $scope.profileAttrib = $scope.profileAttribs[0];
