@@ -11,8 +11,6 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
         var globalValues = mainSvc.getGlobalValues();
     	$scope.showLogin = false;
         $scope.message = '';
-        //$scope.profileBatchSize = 1;
-        //$scope.apiVersion = '32.0';
 
         $scope.profileBatchSize = globalValues.profileBatchSize;
         if(!$scope.profileBatchSize) $scope.profileBatchSize = 1;
@@ -21,7 +19,7 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
         if(!$scope.apiVersion) $scope.apiVersion = '32.0';
 
       
-        $ionicModal.fromTemplateUrl('/partials/settingsModal.html', function(modal) {
+        $ionicModal.fromTemplateUrl(PARTIALS_ROOT + 'settingsModal.html', function(modal) {
           $scope.settingsModal = modal;
         }, {
           scope: $scope,
@@ -30,14 +28,9 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
 
     	if(!$scope.apex){
     		mainSvc.getAuthStatus().then(function(authStatusReturn){
-                //console.log('Auth Return', authStatusReturn);
     			if(!authStatusReturn.data.data.authorized) $scope.showLogin = true;
     			if(authStatusReturn.data.data.authorized && !authStatusReturn.data.data.authenticated){
     				mainSvc.authenticate().then(function(authReturn){
-    					//console.log('Authenticate Return', authReturn);
-                        //mainSvc.describeService().then(function(describeReturn){
-                            //console.log('Service Description',describeReturn);
-                        //})
     				})
     			}
     		})
@@ -47,16 +40,13 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
 
     	$scope.login = function(){
     		mainSvc.getOAuthURL($scope.instance).then(function(returnData){
-    			//console.log(returnData.data);
     			window.location = returnData.data.data;
     		});
     	};
 
         $scope.logout = function(){
             mainSvc.logout().then(function(returnData){
-                //console.log(returnData);
                 window.location = returnData.data.data;
-                //$location.path( "/main" );
             })
         };
 
@@ -79,17 +69,16 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
 
             var input = {};
             input.queries = new Array();
-            input.queries.push({type:type});
+            if($scope.apex){
+                input.queries.push({type_x:type});
+            }else{
+                input.queries.push({type:type});
+            }    
             input.asOfVersion = $scope.apiVersion;
 
-            //console.log('Profile Batch Size', $scope.profileBatchSize);
-
-            mainSvc.listMetadata(JSON.stringify(input)).then(function(profilesResult){
-    
-                //console.log('Metadata Result', profilesResult);
+            mainSvc.listMetadata(JSON.stringify(input),$scope.apex).then(function(profilesResult){
               
                 if(profilesResult.data.success){
-                  //Get the profile data in batches
                     var batchSize = 0;
                     var names = new Array();
                     var profiles = new Array();
@@ -111,30 +100,30 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
                         profiles.push(names);
                     }
 
-                    //console.log('Profiles',profiles);
                     batchSize = 0;
 
                     if(_.size(profiles)<=0) $ionicLoading.hide();
 
                     _(profiles).forEach(function(profile){
                             var inputData = {};
-                            inputData.type = type;
+                            if($scope.apex){
+                                inputData.type_x = type;
+                            }else{
+                                inputData.type = type;
+                            }    
                             inputData.fullNames = profile;
 
-                        mainSvc.readMetaData(JSON.stringify(inputData)).then(function(profileDataResult){   
-                            //console.log('Profile Data Result',profileDataResult);
+                        mainSvc.readMetaData(JSON.stringify(inputData),$scope.apex).then(function(profileDataResult){   
                             batchSize++;
             
-                            _(profileDataResult.data.data).forEach(function(records){
+                            _(profileDataResult.data.data.records).forEach(function(records){
                                 profileData.push(records);
                             })
 
                             if(batchSize == profiles.length){
-                                //$ionicLoading.hide();    
                                 globalValues.profilesData = profileData;
                                 mainSvc.setGlobalValues(globalValues);
                                 $ionicLoading.hide();
-                                //console.log('Scope data',profileData);
                                 $location.path( "/profileDetails").search({type:type});
 
                             }
@@ -144,7 +133,6 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
 
                 }else{
                     $ionicLoading.hide();
-                    // errror;
                 }
                 
 
@@ -158,7 +146,6 @@ sfControllers.controller('main',['$scope', '$q', '$location', '$ionicLoading' , 
 sfControllers.controller('profileDetails',['$scope', '$q', '$location', '$routeParams', '$ionicLoading' , 'mainSvc', 
     function($scope,$q, $location, $routeParams, $ionicLoading, mainSvc){
 
-        //console.log('Route Params', $routeParams)
         var initialMessage = 'Reading in Batch mode, click the download button to download the data in .cvs format';
         $scope.batch = true;
         $scope.message = initialMessage;
@@ -192,7 +179,6 @@ sfControllers.controller('profileDetails',['$scope', '$q', '$location', '$routeP
 
         $scope.profileAttribs = profileAttribs;
         $scope.profileAttrib = $scope.profileAttribs[0];
-        //console.log('Global Values', mainSvc.getGlobalValues());
 
 
         $scope.getFilterTable = function(attrib){ 
@@ -208,7 +194,6 @@ sfControllers.controller('profileDetails',['$scope', '$q', '$location', '$routeP
                         }else{
                             $scope.message += 'Click the download button to download the data in .cvs format';
                         }
-                        //console.log('ProfileTable',returnTable);
                         $ionicLoading.hide();
                  })
 

@@ -41,15 +41,23 @@ sfServices.factory('mainSvc',['$q','$http',function($q,$http){
 
 		},
 
-		listMetadata:function(input){
+		listMetadata:function(input,isApex){
 			var defer = $q.defer();
-			apiCalls($http,'/api/listMetadata','POST',defer,null,input,{'Content-Type': 'text/plain'});
+			if(isApex){
+				apexCalls(apexListMetadata,defer,input);
+			}else{
+				apiCalls($http,'/api/listMetadata','POST',defer,null,input,{'Content-Type': 'text/plain'});
+			}	
 			return defer.promise;
 		},
 
-		readMetaData:function(input){
+		readMetaData:function(input,isApex){
 			var defer = $q.defer();
-			apiCalls($http,'/api/readMetadata','POST',defer,null,input,{'Content-Type': 'text/plain'});
+			if(isApex){
+				apexCalls(apexReadMetadata,defer,input);
+			}else{	
+				apiCalls($http,'/api/readMetadata','POST',defer,null,input,{'Content-Type': 'text/plain'});
+			}	
 			return defer.promise;
 		},
 
@@ -83,6 +91,40 @@ sfServices.factory('mainSvc',['$q','$http',function($q,$http){
 }])
 
 
+function apiCalls($http,url,method,defer,params,body,headers){
+	var returnData = {};
+	var config = {url:url,method:method,params:params,data:body,headers:headers};
+	$http(config).success(function(data,status){
+		returnData.data = data;
+		returnData.success = true;
+		defer.resolve(returnData);
+		
+	}).error(function(data,status){
+		returnData.success = false;
+		returnData.data = status;
+		defer.resolve(returnData);
+	});
+
+}
+
+function apexCalls(module,defer,input){
+	 var returnData = {};
+	 returnData.data = {};
+	 Visualforce.remoting.Manager.invokeAction(module,input,function(result,event){
+	 		if(event.status){
+	 			returnData.data.success = true;
+	 			returnData.data.data = JSON.parse(result);
+	 			defer.resolve(returnData);
+	 		}else{
+	 			returnData.data.success = false;
+	 			returnData.data.data = event.message;
+	 			defer.resolve(returnData);
+	 		}
+	 	},
+	 	{escape:false}
+	 );
+}
+
 
 function frameProfileTable(defer,rootObjectName){
 	var returnTable = {};
@@ -113,6 +155,7 @@ function frameProfileTable(defer,rootObjectName){
 				data.ID = profile.id;
 			}
 			_(_.keys(recordType)).forEach(function(fieldName){
+				if(!fieldName.endsWith("_type_info")) //for Apex
 				data[fieldName] = recordType[fieldName];
 			})
 			returnTable.data.push(data);
@@ -133,26 +176,20 @@ function frameProfileTable(defer,rootObjectName){
 	defer.resolve(returnTable);
 }
 
+if ( typeof String.prototype.startsWith != 'function' ) {
+  String.prototype.startsWith = function( str ) {
+    return str.length > 0 && this.substring( 0, str.length ) === str;
+  }
+};
 
-function apiCalls($http,url,method,defer,params,body,headers){
-	var returnData = {};
-	var config = {url:url,method:method,params:params,data:body,headers:headers};
-	$http(config).success(function(data,status){
-		returnData.data = data;
-		returnData.success = true;
-		defer.resolve(returnData);
-		
-	}).error(function(data,status){
-		returnData.success = false;
-		returnData.data = status;
-		defer.resolve(returnData);
-	});
+if ( typeof String.prototype.endsWith != 'function' ) {
+  String.prototype.endsWith = function( str ) {
+    return str.length > 0 && this.substring( this.length - str.length, this.length ) === str;
+  }
+};
 
-}
 
-function apexCalls(){
 
-}
 
 
 

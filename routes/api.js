@@ -158,7 +158,7 @@ exports.readMetadata = function(req,res){
 				response.data = error.body;
 			}else{
 				response.success = true;
-				response.data = result.result.records;
+				response.data = result.result;
 			}
 			res.json(response);
 		})

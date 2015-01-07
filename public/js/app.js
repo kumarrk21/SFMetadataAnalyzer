@@ -18,16 +18,15 @@ var sfApp = angular.module('SFMetadataAnalyzer', [
 
 sfApp.config(['$routeProvider', '$locationProvider',
 	function($routeProvider,$locationProvider){
-
 		$routeProvider.
 
 		 	when('/landing',{
-				templateUrl: 'partials/landing.html',
+				templateUrl: PARTIALS_ROOT + 'landing.html',
 				controller: 'main',	
 
 			}).
 			when('/profileDetails',{
-				templateUrl: 'partials/profiledetails.html',
+				templateUrl: PARTIALS_ROOT + 'profiledetails.html',
 				controller: 'profileDetails',	
 
 			}).
