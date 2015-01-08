@@ -39,7 +39,6 @@ sfApp.config(['$routeProvider', '$locationProvider',
   			enabled: true,
   			requireBase: false
 		});	
-		//$locationProvider.html5Mode(true);	
-		//$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);	
+		
 	}
 	]);
