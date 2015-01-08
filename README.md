@@ -11,14 +11,6 @@ This package uses the following technologies and frameworks
 * AngularJS (https://angularjs.org/)
 * Ionic Framework (http://ionicframework.com/)
 * Filesaver.js (https://github.com/eligrey/FileSaver.js/)
-<<<<<<< HEAD
-
-A working version of this application is also available at https://dry-island-7551.herokuapp.com/
-
-More information available at http://kksfblog.wordpress.com/2015/01/08/salesforce-metadata-analyzer-audit-all-you-want/
-
-=======
->>>>>>> 8351a2274fb1e9fb8821a461ce7791a756c61dc6
 
 A working version of this application is also available at https://dry-island-7551.herokuapp.com/
 
