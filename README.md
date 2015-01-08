@@ -14,4 +14,4 @@ This package uses the following technologies and frameworks
 
 A working version of this application is also available at https://dry-island-7551.herokuapp.com/
 
-# How to install this in your environment
+More information available at http://kksfblog.wordpress.com/2015/01/08/salesforce-metadata-analyzer-audit-all-you-want/
